@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "多次未修复BUG列表";
+}
+
+@using Model;
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#txtProductName").change(function(){
+                $.ajax({
+                    url:"./home/GetProjectDataByProductId",
+                    data:{product:$(this).val()},
+                    type:"Get",
+                    success:function(obj){
+                        if(obj.success===true){
+                            $("#txtProjectName").empty();
+                            if(obj.json.length==0){
+                                $('#txtProjectName').append($("<option value='0'>--暂无数据--</option>")); 
+                            }
+                            for(var i = 0,len = obj.json.length; i<len; i++){ 
+                                $('#txtProjectName').append($("<option value='"+obj.json[i].id+"'>"+obj.json[i].name+"</option>")); 
+                            }
+                        }
+                        //console.log(obj);
+                    }
+                }) ;
+            });
+
+            $("#query").click(function(){
+                $("#BugTable tbody").empty().append($("<tr><td colspan='5'>正在查询数据...<td></tr>")); 
+                $.ajax({
+                    url:"./home/GetBugDataByQuery",
+                    data:{project:$("#txtProjectName").val(),act:$("#txtActionName").val(),count:$("#count").val()},
+                    type:"Get",
+                    success:function(obj){
+                        if(obj.success===true){
+                            $("#BugTable tbody").empty();
+                            if(obj.json.length==0){
+                                $('#BugTable>tbody').append($("<tr><td colspan='5'>--暂无数据--<td></tr>")); 
+                            }
+                            
+                            var html='',count=0;
+                            for(var i = 0,len = obj.json.length; i<len; i++){ 
+                                if(count==0){
+                                    //html="<tr><td rowspan='"+obj.json[i].groupByCount+"'>"+obj.json[i].projectName+"</td>";
+                                    html="<tr><td rowspan='"+obj.json[i].groupByCount+"'>"+obj.json[i].bugId+"</td>";
+                                    html+="<td rowspan='"+obj.json[i].groupByCount+"'>"+obj.json[i].bugName+"</td>";
+                                    html+="<td>"+obj.json[i].date+"</td>";
+                                    html+="<td width=6%>"+obj.json[i].actor+"</td>"; 
+                                    html+="<td>"+obj.json[i].action+"</td>";
+                                    html+="<td>"+obj.json[i].comment+"</td></tr>";
+                                }else{
+                                    html="<tr><td>"+obj.json[i].date+"</td>";
+                                    html+="<td  width=6%>"+obj.json[i].actor+"</td>";
+                                    html+="<td>"+obj.json[i].action+"</td>";
+                                    html+="<td>"+obj.json[i].comment+"</td></tr>";
+                                }
+                                
+                                $('#BugTable>tbody').append($(html)); 
+                                count++;
+                                if(count===obj.json[i].groupByCount){count=0;}
+                            }
+                        }
+                        console.log(obj);
+                    }
+                }) ;
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                // 激活表报的标签页
+                var activeTabId = $(e.target).attr('id');
+                if(activeTabId==="report"){
+                    
+                }
+            });
+        });
+    </script>
+}
+<div>
+  <div class="form-group">
+    <label for="product">产品：</label>
+    @Html.GenerateSelectHtml( ( List<SelectListItem> )ViewBag.Products , "txtProductName" )
+  </div>
+  <div class="form-group">
+    <label for="project">项目：</label>
+   @Html.GenerateSelectHtml( ( List<SelectListItem> )ViewBag.Projects , "txtProjectName" )
+  </div>
+  <div class="form-group">
+    <label for="action">操作行为：</label>
+   @Html.GenerateSelectHtml( ( List<SelectListItem> )ViewBag.Action , "txtActionName" ) 
+  </div>
+    <div class="form-group">
+    <label for="ActionCount">次数：</label>
+   @Html.GenerateSelectHtml( ( List<SelectListItem> )ViewBag.ActionCount , "count" )
+  </div>
+  <div class="form-group">
+      <button type="button" class="btn btn-block btn-default" name="del" id="query">查询</button>
+  </div>
+</div>
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#buglist" data-toggle="tab">
+            BUG列表
+        </a>
+    </li>
+    <li><a href="#ios" data-toggle="tab" id="report">报表</a></li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+     <div class="tab-pane fade in active" id="buglist">
+        <table id="BugTable" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                
+                <th>BugID</th>
+                <th>BUG标题</th>
+                <th>操作日期</th>   
+                <th>操作者</th>
+                <th>操作行为</th>
+                <th>备注</th>
+            </tr></thead>
+            <tbody>
+        @if(@ViewBag.BugList.Count==0)
+        {
+            <tr><td colspan='5'>--暂无数据--<td></tr>
+        }else
+        {
+            foreach(ZT_Bug s in @ViewBag.BugList as List<ZT_Bug>)
+            {
+                <tr>
+                    
+                    <td>@s.BugId</td>
+                    <td>@s.BugName</td>
+                    <td>@s.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@s.Actor</td>
+                    <td>@s.Action</td>
+                    <td>@s.Comment</td>
+                </tr>
+            }
+        }
+        </tbody>
+        </table>
+     </div>
+     <div class="tab-pane fade" id="ios">
+                <div class="group-wp">
+            <ul class="nav nav-tabs-custom clearfix">
+                <li class="active"><a>解决维度</a></li>
+            </ul>
+            <div class="rank-wrap">
+                <div class="rank-data">
+                    <h3>6人</h3>
+                    <ul>
+                        <li><i class="ri1"></i>1次解决:</li>
+                        <li><i class="ri2"></i>2次解决:</li>
+                        <li><i class="ri3"></i>3次及以上解决:</li>
+                    </ul>
+                </div>
+                <a class="data-area"><div class="group-meta" id="resolved-rank"></div></a>
+            </div>
+
+            <ul class="nav nav-tabs-custom clearfix">
+                <li class="active"><a>关闭维度</a></li>
+            </ul>
+            <div class="rank-wrap">
+                <div class="rank-data">
+                    <h3>6人</h3>
+                    <ul>
+                        <li><i class="ri1"></i>1次关闭:</li>
+                        <li><i class="ri2"></i>2次关闭:</li>
+                        <li><i class="ri3"></i>3次及以上解决:</li>
+                    </ul>
+                </div>
+                <a class="data-area"><div class="group-meta" id="closed-rank"></div></a>
+            </div>
+
+        </div>
+    </div>
+</div>

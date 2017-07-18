@@ -1,0 +1,6 @@
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netstandard1.4/Model.deps.json
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netstandard1.4/Model.dll
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netstandard1.4/Model.pdb
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netstandard1.4/Model.AssemblyInfo.cs
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netstandard1.4/Model.dll
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netstandard1.4/Model.pdb

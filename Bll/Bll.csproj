@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.8-dmr"/>
+    <PackageReference Include="ChloeCore.MySql" Version="2.12.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-preview2-final"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-preview2-final"/>
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+</Project>

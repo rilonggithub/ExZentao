@@ -1,0 +1,6 @@
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netcoreapp1.1/Model.deps.json
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netcoreapp1.1/Model.dll
+/Users/liaorilong/Desktop/zentao/Model/bin/Debug/netcoreapp1.1/Model.pdb
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netcoreapp1.1/Model.AssemblyInfo.cs
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netcoreapp1.1/Model.dll
+/Users/liaorilong/Desktop/zentao/Model/obj/Debug/netcoreapp1.1/Model.pdb
