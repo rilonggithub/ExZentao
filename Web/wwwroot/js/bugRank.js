@@ -5,7 +5,7 @@ $(function () {
             text: '正在加载图表...',
             effect: 'bubble',
             textStyle: {
-                fontSize: 20
+                fontSize: 20 
             }
         });
         setTimeout(function () {
