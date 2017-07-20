@@ -46,9 +46,9 @@ namespace Web.Controllers
         {
             List<SelectListItem> ActionSelItem = new List<SelectListItem>();
             
-            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "大于1次" , Value = "1" } );
-            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "大于2次" , Value = "2" } );
-            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "大于3次" , Value = "3" } );
+            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "等于1次" , Value = "1" } );
+            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "等于2次" , Value = "2" } );
+            ActionSelItem.Add( new SelectListItem { Selected = false , Text = "等于3次" , Value = "3" } );
             
             return ActionSelItem;
         }
@@ -85,6 +85,22 @@ namespace Web.Controllers
         {
             var bugs = new Bll.ZTBugBLL().GetAllBug(project,act,count);
             return Json(new{success=true,Json=bugs}) ;
+        }
+
+        [HttpGet]
+        public JsonResult GetBugDataByChart(int project,string act)
+        {
+            int[] count=new int [3];
+            if(act.ToLower().Equals("closed")){
+                count[0]=new Bll.ZTBugBLL().GetBugCountByOneClosed(project);
+                count[1]=new Bll.ZTBugBLL().GetBugCountByTwoClosed(project);
+                count[2]=new Bll.ZTBugBLL().GetBugCountByThreeAndMoreClosed(project);
+            }else if(act.ToLower().Equals("resolved")){
+                count[0]=new Bll.ZTBugBLL().GetBugCountByOneResolved(project);
+                count[1]=new Bll.ZTBugBLL().GetBugCountByTwoResolved(project);
+                count[2]=new Bll.ZTBugBLL().GetBugCountByThreeAndMoreResolved(project);
+            }
+            return Json(new{success=true,Json=count}) ;
         }
     }
 }

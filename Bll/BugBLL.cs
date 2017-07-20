@@ -8,6 +8,66 @@ namespace Bll
 {
     public class ZTBugBLL
     {
+        private int GetBugCount(int project,string action,int startCount,int endCount)
+        {
+            var count=DataContent.Context().SqlQuery<int>("select count(0) as count from   ( "+
+                    "select a.objectID from zt_action a "+
+                    "where a.project=@project "+
+                    "and a.objectType='bug' "+
+                    "and a.action=@action "+
+                    "GROUP BY a.objectID,a.action "+
+                    "HAVING count(a.action)>@startCount and count(a.action)<=@endCount "+
+                    "ORDER BY a.objectID "+
+                    ") a ;", 
+                    new DbParam[] {
+                    DbParam.Create("@project", project.ToString()),
+                    DbParam.Create("@action", action),
+                    DbParam.Create("@startCount", startCount.ToString()),
+                    DbParam.Create("@endCount", endCount.ToString())
+                }).FirstOrDefault();
+            return count;
+        }
+
+        public int GetBugCountByOneClosed(int project)
+        {
+            var count=GetBugCount(project,"closed",0,1);
+            return count;
+        }
+
+        public int GetBugCountByTwoClosed(int project)
+        {
+            var count=GetBugCount(project,"closed",1,2);
+            return count;
+        }
+
+        public int GetBugCountByThreeAndMoreClosed(int project)
+        {
+            var count=GetBugCount(project,"closed",2,100);
+            return count;
+        }
+
+
+
+        public int GetBugCountByOneResolved(int project)
+        {
+            var count=GetBugCount(project,"resolved",0,1);
+            return count;
+        }
+
+        public int GetBugCountByTwoResolved(int project)
+        {
+            var count=GetBugCount(project,"resolved",1,2);
+            return count;
+        }
+
+        public int GetBugCountByThreeAndMoreResolved(int project)
+        {
+            var count=GetBugCount(project,"resolved",2,100);
+            return count;
+        }
+
+
+
         public List<Model.ZT_Bug> GetAllBug(int project,string action,int count)
         {
             try
@@ -23,7 +83,7 @@ namespace Bll
                         "and a.objectType='bug' "+
                         "and a.action= @action "+
                         "GROUP BY a.objectID,a.action "+
-                        "HAVING count(a.action)> @count "+
+                        "HAVING count(a.action)= @count "+
                         "ORDER BY a.objectID) "+ 
                         "order by objectID,date;", 
                         new DbParam[] {
